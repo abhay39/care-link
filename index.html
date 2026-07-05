@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<!--
+  CareLink — Phase 0 validation landing page
+  =========================================
+  BEFORE DEPLOYING (2 minutes):
+  1. Create a free form at https://formspree.io  (or Tally / Google Forms).
+  2. Replace  YOUR_FORM_ID  in the <form action="..."> below with your Formspree ID.
+  3. Drop this single file on Netlify (drag-and-drop), Vercel, or GitHub Pages.
+  That's it — you now have a live validation instrument that captures email + price signal.
+  The form deliberately includes a price test and an open question — both feed your interviews.
+-->
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CareLink — Know they took their medicine, from wherever you are</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F4F6F1; --surface:#FFFFFF; --ink:#1B2A24; --ink-soft:#4C5D55;
+    --green:#16624B; --green-deep:#0E4736; --green-soft:#DDEEE5; --green-line:#C9E2D6;
+    --amber:#D9892E; --line:#E3E9E2; --wa:#1FA855;
+    --serif:"Instrument Serif",Georgia,serif; --sans:"Inter",system-ui,sans-serif;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:var(--sans);background:var(--paper);color:var(--ink);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+  .eyebrow{font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--green);margin-bottom:14px}
+  a{color:inherit}
+
+  /* nav */
+  nav{padding:26px 0}
+  nav .wrap{display:flex;align-items:center;justify-content:space-between}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:600;font-size:18px;letter-spacing:-.01em}
+  .logo .dot{width:11px;height:11px;border-radius:50%;background:var(--green);box-shadow:0 0 0 4px var(--green-soft)}
+  .nav-cta{font-size:14px;font-weight:600;color:var(--green);text-decoration:none;border:1.5px solid var(--green-line);padding:9px 16px;border-radius:999px;transition:.2s}
+  .nav-cta:hover{background:var(--green);color:#fff;border-color:var(--green)}
+
+  /* hero */
+  .hero{padding:52px 0 64px}
+  .hero .wrap{display:grid;grid-template-columns:1.15fr .85fr;gap:56px;align-items:center}
+  h1{font-family:var(--serif);font-weight:400;font-size:clamp(40px,6vw,68px);line-height:1.04;letter-spacing:-.01em;margin-bottom:22px}
+  h1 em{font-style:italic;color:var(--green)}
+  .lede{font-size:19px;color:var(--ink-soft);max-width:34ch;margin-bottom:30px}
+  .btn{display:inline-block;background:var(--green);color:#fff;font-family:var(--sans);font-weight:600;font-size:16px;padding:15px 28px;border-radius:999px;text-decoration:none;border:none;cursor:pointer;transition:.2s}
+  .btn:hover{background:var(--green-deep);transform:translateY(-1px)}
+  .hero-note{margin-top:16px;font-size:13.5px;color:var(--ink-soft)}
+
+  /* phone / confirmation visual */
+  .phone{background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:20px;box-shadow:0 24px 60px -30px rgba(20,60,45,.4)}
+  .phone-top{display:flex;align-items:center;gap:9px;padding-bottom:14px;border-bottom:1px solid var(--line);margin-bottom:16px}
+  .avatar{width:34px;height:34px;border-radius:50%;background:var(--green-soft);color:var(--green-deep);display:grid;place-items:center;font-weight:600;font-size:14px}
+  .phone-top small{display:block;color:var(--ink-soft);font-size:12px;font-weight:400}
+  .phone-top b{font-size:14.5px;font-weight:600}
+  .bubble{max-width:82%;padding:11px 14px;border-radius:14px;font-size:14.5px;margin-bottom:12px;opacity:0;transform:translateY(8px);animation:rise .5s forwards}
+  .bubble.them{background:var(--green-soft);border-top-left-radius:4px}
+  .bubble.me{background:var(--wa);color:#fff;margin-left:auto;border-top-right-radius:4px;display:flex;align-items:center;gap:8px}
+  .bubble.me .tick{font-size:13px;opacity:.9}
+  .status{opacity:0;animation:rise .5s forwards;animation-delay:1.5s;margin-top:6px;display:flex;align-items:center;gap:9px;font-size:13px;color:var(--green-deep);background:#fff;border:1px solid var(--green-line);padding:10px 13px;border-radius:12px}
+  .status .check{width:20px;height:20px;border-radius:50%;background:var(--green);color:#fff;display:grid;place-items:center;font-size:12px;flex:none}
+  .b1{animation-delay:.3s}.b2{animation-delay:.9s}
+  @keyframes rise{to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.bubble,.status{animation:none;opacity:1;transform:none}}
+
+  /* generic section */
+  section{padding:64px 0}
+  .section-head{max-width:620px;margin-bottom:44px}
+  h2{font-family:var(--serif);font-weight:400;font-size:clamp(30px,4vw,42px);line-height:1.1;letter-spacing:-.01em;margin-bottom:14px}
+  .section-head p{color:var(--ink-soft);font-size:17px}
+
+  /* problem band */
+  .band{background:var(--green-deep);color:#EAF4EF}
+  .band .quote{font-family:var(--serif);font-size:clamp(26px,3.6vw,40px);line-height:1.25;max-width:20ch}
+  .band .quote span{color:#8FD3B8}
+  .band p{color:#B9D4C8;margin-top:22px;max-width:52ch;font-size:16.5px}
+
+  /* steps */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;counter-reset:s}
+  .step{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+  .step::before{counter-increment:s;content:"0" counter(s);font-family:var(--serif);font-size:34px;color:var(--green);display:block;margin-bottom:12px;line-height:1}
+  .step h3{font-size:17px;font-weight:600;margin-bottom:7px}
+  .step p{color:var(--ink-soft);font-size:15px}
+
+  /* wedge */
+  .wedge{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:44px}
+  .wedge ul{list-style:none;margin-top:18px}
+  .wedge li{display:flex;gap:12px;padding:9px 0;font-size:16px;color:var(--ink)}
+  .wedge li .c{width:22px;height:22px;border-radius:50%;background:var(--green-soft);color:var(--green-deep);display:grid;place-items:center;font-size:12px;font-weight:600;flex:none;margin-top:2px}
+
+  /* pricing / price test */
+  .price-intro{text-align:center;max-width:600px;margin:0 auto 40px}
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+  .plan{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:28px;text-align:center}
+  .plan.feature{border-color:var(--green);box-shadow:0 0 0 1px var(--green)}
+  .plan .tag{font-size:13px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.08em}
+  .plan .amt{font-family:var(--serif);font-size:44px;margin:8px 0 2px}
+  .plan .amt small{font-size:15px;font-family:var(--sans);color:var(--ink-soft)}
+  .plan .desc{color:var(--ink-soft);font-size:14.5px;min-height:42px}
+
+  /* form */
+  .form-card{background:var(--surface);border:1px solid var(--line);border-radius:20px;padding:clamp(28px,4vw,48px);max-width:640px;margin:0 auto}
+  .field{margin-bottom:22px}
+  label.q{display:block;font-weight:600;font-size:15px;margin-bottom:10px}
+  input[type=email],input[type=text],textarea{width:100%;font-family:var(--sans);font-size:15px;padding:13px 15px;border:1.5px solid var(--line);border-radius:10px;background:var(--paper);color:var(--ink);transition:.15s}
+  input:focus,textarea:focus{outline:none;border-color:var(--green);background:#fff}
+  textarea{resize:vertical;min-height:76px}
+  .opts{display:grid;gap:9px}
+  .opt{display:flex;align-items:center;gap:11px;border:1.5px solid var(--line);border-radius:10px;padding:12px 14px;cursor:pointer;font-size:15px;transition:.15s}
+  .opt:hover{border-color:var(--green-line);background:var(--green-soft)}
+  .opt input{accent-color:var(--green);width:17px;height:17px}
+  .opt:has(input:checked){border-color:var(--green);background:var(--green-soft)}
+  .form-card .btn{width:100%;margin-top:6px}
+  .privacy{font-size:12.5px;color:var(--ink-soft);text-align:center;margin-top:14px}
+
+  /* footer */
+  footer{padding:48px 0;border-top:1px solid var(--line);color:var(--ink-soft);font-size:13.5px;text-align:center}
+  footer .honest{max-width:60ch;margin:0 auto 14px;font-size:13.5px}
+
+  @media(max-width:860px){
+    .hero .wrap{grid-template-columns:1fr;gap:40px}
+    .steps,.plans{grid-template-columns:1fr}
+    .wedge{grid-template-columns:1fr;padding:30px}
+  }
+</style>
+</head>
+<body>
+
+<nav><div class="wrap">
+  <div class="logo"><span class="dot"></span>CareLink</div>
+  <a class="nav-cta" href="#waitlist">Join the waitlist</a>
+</div></nav>
+
+<header class="hero"><div class="wrap">
+  <div>
+    <div class="eyebrow">For families who live apart</div>
+    <h1>Know they took their medicine — <em>from wherever you are.</em></h1>
+    <p class="lede">CareLink reminds your parents to take their medicines on WhatsApp, and quietly tells you the moment a dose is missed. No app for them to figure out.</p>
+    <a class="btn" href="#waitlist">Join the early waitlist</a>
+    <p class="hero-note">Building for Indian families. Tell us what you'd pay — it shapes what we build.</p>
+  </div>
+  <div class="phone">
+    <div class="phone-top">
+      <div class="avatar">CL</div>
+      <div><b>CareLink</b><small>reminding Amma</small></div>
+    </div>
+    <div class="bubble them b1">Good morning Amma 🌸 Time for your 8:00 BP tablet (Telma 40).</div>
+    <div class="bubble me b2"><span>Taken ✅</span><span class="tick">✓✓</span></div>
+    <div class="status"><span class="check">✓</span> You were notified: Amma took her 8:00 AM dose</div>
+  </div>
+</div></header>
+
+<section class="band"><div class="wrap">
+  <div class="eyebrow" style="color:#8FD3B8">The daily worry</div>
+  <div class="quote">"I'm <span>800 km away</span> and I don't know if Appa took his medicine today."</div>
+  <p>Parents grow older in one city while their children build lives in another. A missed BP or sugar tablet isn't a small thing — but calling every day to check feels like nagging, and most of the time you just… don't know.</p>
+</div></section>
+
+<section><div class="wrap">
+  <div class="section-head">
+    <div class="eyebrow">How it works</div>
+    <h2>Set it up once. Then it just runs.</h2>
+    <p>You do the thinking. Your parent does one tap. You only hear from us when it matters.</p>
+  </div>
+  <div class="steps">
+    <div class="step"><h3>You add their medicines</h3><p>Snap a photo of the prescription — we read it and set up the schedule. Doses, timings, refills.</p></div>
+    <div class="step"><h3>They get a WhatsApp reminder</h3><p>A gentle message at each dose time, in language they're comfortable with. They reply "Taken" — that's it.</p></div>
+    <div class="step"><h3>You're told only if it's missed</h3><p>Confirmed doses log quietly. Miss one, and you get a nudge — so a bad day never goes unnoticed.</p></div>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="wedge">
+    <div>
+      <div class="eyebrow">Why WhatsApp</div>
+      <h2>Nothing for your parent to install.</h2>
+      <p style="color:var(--ink-soft);margin-top:8px">Every other app asks your parent to download, sign up, and learn a new thing. Most won't. CareLink meets them where they already are — the WhatsApp they use every day.</p>
+    </div>
+    <ul>
+      <li><span class="c">✓</span> Reminders arrive on WhatsApp — no new app for them</li>
+      <li><span class="c">✓</span> Reminders in their own language</li>
+      <li><span class="c">✓</span> Your parent always sees who's helping them, and can stop anytime</li>
+      <li><span class="c">✓</span> You see whether doses were taken — nothing else. No tracking.</li>
+    </ul>
+  </div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="price-intro">
+    <div class="eyebrow">Help us price it</div>
+    <h2>What would peace of mind be worth to you?</h2>
+    <p style="color:var(--ink-soft)">We haven't launched yet. Below is what we're considering — tell us honestly in the form which one you'd actually pay for.</p>
+  </div>
+  <div class="plans">
+    <div class="plan"><div class="tag">Free</div><div class="amt">₹0</div><div class="desc">One parent, basic daily reminders.</div></div>
+    <div class="plan feature"><div class="tag">Care</div><div class="amt">₹99<small>/mo</small></div><div class="desc">WhatsApp reminders, missed-dose alerts, refill reminders.</div></div>
+    <div class="plan"><div class="tag">Family</div><div class="amt">₹199<small>/mo</small></div><div class="desc">Everything, multiple family members, weekly doctor report.</div></div>
+  </div>
+</div></section>
+
+<section id="waitlist"><div class="wrap">
+  <div class="section-head" style="text-align:center;margin:0 auto 40px">
+    <div class="eyebrow">Join the waitlist</div>
+    <h2>Be one of the first families we build with.</h2>
+    <p style="margin:0 auto">Three quick questions. Your answers directly shape what we make.</p>
+  </div>
+
+  <!-- Replace YOUR_FORM_ID with your Formspree form ID before deploying -->
+  <form class="form-card" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+    <div class="field">
+      <label class="q" for="email">Your email</label>
+      <input type="email" id="email" name="email" placeholder="you@example.com" required>
+    </div>
+
+    <div class="field">
+      <label class="q">If CareLink existed today, which would you actually pay for?</label>
+      <div class="opts">
+        <label class="opt"><input type="radio" name="price_signal" value="only_free" required> I'd use it only if it's free</label>
+        <label class="opt"><input type="radio" name="price_signal" value="99"> ₹99/month — worth it for peace of mind</label>
+        <label class="opt"><input type="radio" name="price_signal" value="199"> ₹199/month — I'd pay for the full thing</label>
+        <label class="opt"><input type="radio" name="price_signal" value="not_for_me"> Honestly, this isn't for me</label>
+      </div>
+    </div>
+
+    <div class="field">
+      <label class="q" for="worry">What worries you most about your parent's medication right now?</label>
+      <textarea id="worry" name="biggest_worry" placeholder="A sentence is fine — this helps us more than you'd think."></textarea>
+    </div>
+
+    <div class="field">
+      <label class="q" for="who">Who would this be for? <span style="font-weight:400;color:var(--ink-soft)">(optional)</span></label>
+      <input type="text" id="who" name="for_whom" placeholder="e.g. my mother, 68, on BP + diabetes meds">
+    </div>
+
+    <button class="btn" type="submit">Join the waitlist</button>
+    <p class="privacy">No spam. We'll only email you about early access. You can reply and tell us to stop anytime.</p>
+  </form>
+</div></section>
+
+<footer><div class="wrap">
+  <p class="honest">CareLink is an early idea, not a finished product — we're talking to families before we build, so we make the right thing. If this is something you'd want for your parents, the waitlist is how you tell us.</p>
+  <p>© CareLink · An early-stage project · Made in India</p>
+</div></footer>
+
+</body>
+</html>
